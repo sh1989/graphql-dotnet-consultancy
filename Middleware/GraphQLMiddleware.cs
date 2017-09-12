@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using GraphQL;
 using GraphQL.Http;
@@ -19,47 +22,47 @@ namespace GraphQLConsultancy.Middleware {
         }
 
         public async Task Invoke(HttpContext context) {
-            var sent = false;
-            if (context.Request.Path.StartsWithSegments("/graphql")) {
-                using (var str = new StreamReader(context.Request.Body)) {
-                    var query = await str.ReadToEndAsync();
-                    if (!String.IsNullOrWhiteSpace(query)) {
-                        var result = await new DocumentExecuter()
-                            .ExecuteAsync(options => {
-                                options.Schema = schema;
-                                options.Query = query;
-                            }).ConfigureAwait(false);
-                        CheckForErrors(result);
-                        await WriteResult(context, result);
-                        sent = true;
-                    }
-                }
+            if (!IsGraphQLRequest(context)) {
+                await next(context).ConfigureAwait(false);
+                return;
             }
-            if (!sent) {
-                await next(context);
-            }
+            await ExecuteAsync(context);
         }
 
-        private async Task WriteResult(HttpContext context, ExecutionResult result) {
-            var json = new DocumentWriter(indent: true)
+        private bool IsGraphQLRequest(HttpContext context) {
+            return context.Request.Path.StartsWithSegments("/graphql") &&
+                string.Equals(context.Request.Method, "POST", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private async Task ExecuteAsync(HttpContext context) {
+            string body;
+            using (var streamReader = new StreamReader(context.Request.Body)) {
+                body = await streamReader
+                    .ReadToEndAsync()
+                    .ConfigureAwait(true);
+            }
+
+            var request = JsonConvert.DeserializeObject<GraphQLRequest>(body);
+
+            var result = await new DocumentExecuter()
+                .ExecuteAsync(options => {
+                    options.Schema = schema;
+                    options.Query = request.Query;
+                    options.OperationName = request.OperationName;
+                    options.Inputs = request.Variables.ToInputs();
+                });
+            
+            await WriteResponseAsync(context, result);
+        }
+
+        private async Task WriteResponseAsync(HttpContext context, ExecutionResult result) {
+            var json = new DocumentWriter()
                 .Write(result);
-            context.Response.StatusCode = 200;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(json);
-        }
-
-        private void CheckForErrors(ExecutionResult result) {
-            if (result.Errors?.Count > 0) {
-                var errors = new List<Exception>();
-                foreach(var error in result.Errors) {
-                    var ex = new Exception(error.Message);
-                    if (error.InnerException != null){
-                        ex = new Exception(error.Message, error.InnerException);
-                    }
-                    errors.Add(ex);
-                }
-                throw new AggregateException(errors);
-            }
+            context.Response.StatusCode = result.Errors?.Any() == true ?
+                (int) HttpStatusCode.BadRequest :
+                (int) HttpStatusCode.OK;
+                await context.Response.WriteAsync(json);
         }
     }
 }

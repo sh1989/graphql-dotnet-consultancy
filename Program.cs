@@ -14,7 +14,7 @@ namespace GraphQLConsultancy
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseWebRoot("public")
+                .UseWebRoot("wwwroot")
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();

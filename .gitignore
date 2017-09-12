@@ -1,3 +1,6 @@
 .vscode/
 bin/
 obj/
+/wwwroot/bundle.js
+/wwwroot/style.css
+node_modules/
