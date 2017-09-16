@@ -1,8 +1,8 @@
 using GraphQL.Types;
 
 namespace GraphQLConsultancy.Schema {
-    public class DeleteDeveloperInputType : InputObjectGraphType {
-        public DeleteDeveloperInputType() {
+    public class DeleteProjectInput : InputObjectGraphType {
+        public DeleteProjectInput() {
             Field<NonNullGraphType<StringGraphType>>("id");
         }
     }

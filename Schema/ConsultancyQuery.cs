@@ -6,6 +6,7 @@ using GraphQL.Types;
 namespace GraphQLConsultancy.Schema {
     public class ConsultancyQuery : ObjectGraphType {
         public ConsultancyQuery(IDataRepository data) {
+            Name = "Query";
             Field<DeveloperType>("developer",
                 arguments: new QueryArguments(
                     new QueryArgument<StringGraphType>() { Name = "id" }

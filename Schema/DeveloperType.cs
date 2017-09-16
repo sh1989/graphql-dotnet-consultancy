@@ -8,6 +8,8 @@ using GraphQL.Types;
 namespace GraphQLConsultancy.Schema {
     public class DeveloperType : ObjectGraphType<Developer> {
         public DeveloperType(IDataRepository repository) {
+            Name = "Developer";
+            Interface<NamedInterface>();
             Field(x => x.Id);
             Field(x => x.Name);
             Field<RoleType>("role");

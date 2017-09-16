@@ -6,6 +6,7 @@ using GraphQL.Types;
 namespace GraphQLConsultancy.Schema {
     public class CompetencyType : ObjectGraphType<Competency> {
         public CompetencyType(IDataRepository repository) {
+            Name = "Competency";
             Field<StringGraphType>("name",
                 resolve: context => repository
                     .GetSkill(context.Source.SkillId)

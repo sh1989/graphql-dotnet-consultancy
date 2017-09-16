@@ -4,22 +4,11 @@ using GraphQLConsultancy.Model;
 
 namespace GraphQLConsultancy.Schema {
     public class ConsultancyMutation : ObjectGraphType {
-
-        /*
-            y addDeveloper : Developer (name, role)
-            y deleteDeveloper : String (id)
-            y addProject : Project (name, description)
-            y deleteProject : String (id)
-            y addSkill : Skill (name)
-            assignCompetency : Developer (developer, skill, rating)
-            assignProject : Developer (developer, project)
-            assignRole : Developer (developer, role)
-         */
-
         public ConsultancyMutation(IDataRepository repository) {
+            Name = "Mutation";
             Field<DeveloperType>("addDeveloper",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<DeveloperInputType>> { Name = "input" }
+                    new QueryArgument<NonNullGraphType<DeveloperInput>> { Name = "input" }
                 ),
                 resolve: context => {
                     var developer = context.GetArgument<Developer>("input");
@@ -28,7 +17,7 @@ namespace GraphQLConsultancy.Schema {
             );
             Field<StringGraphType>("deleteDeveloper",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<DeleteDeveloperInputType>> { Name = "input" }
+                    new QueryArgument<NonNullGraphType<DeleteDeveloperInput>> { Name = "input" }
                 ),
                 resolve: context => {
                     var developer = context.GetArgument<Developer>("input");
@@ -37,7 +26,7 @@ namespace GraphQLConsultancy.Schema {
             );
             Field<ProjectType>("addProject",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<ProjectInputType>> { Name = "input" }
+                    new QueryArgument<NonNullGraphType<ProjectInput>> { Name = "input" }
                 ),
                 resolve: context => {
                     var project = context.GetArgument<Project>("input");
@@ -46,7 +35,7 @@ namespace GraphQLConsultancy.Schema {
             );
             Field<StringGraphType>("deleteProject",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<DeleteProjectInputType>> { Name = "input" }
+                    new QueryArgument<NonNullGraphType<DeleteProjectInput>> { Name = "input" }
                 ),
                 resolve: context => {
                     var project = context.GetArgument<Project>("input");
@@ -55,7 +44,7 @@ namespace GraphQLConsultancy.Schema {
             );
             Field<SkillType>("addSkill",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<SkillInputType>> { Name = "input" }
+                    new QueryArgument<NonNullGraphType<SkillInput>> { Name = "input" }
                 ),
                 resolve: context => {
                     var skill = context.GetArgument<Skill>("input");
@@ -64,7 +53,7 @@ namespace GraphQLConsultancy.Schema {
             );
             Field<DeveloperType>("assignCompetency",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<AssignCompetencyInputType>> { Name = "input" }
+                    new QueryArgument<NonNullGraphType<AssignCompetencyInput>> { Name = "input" }
                 ),
                 resolve: context => {
                     var operation = context.GetArgument<CompetencyAssignment>("input");
@@ -72,7 +61,7 @@ namespace GraphQLConsultancy.Schema {
                 });
             Field<DeveloperType>("assignProject",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<AssignProjectInputType>> { Name = "input" }
+                    new QueryArgument<NonNullGraphType<AssignProjectInput>> { Name = "input" }
                 ),
                 resolve: context => {
                     var operation = context.GetArgument<ProjectAssignment>("input");
@@ -80,7 +69,7 @@ namespace GraphQLConsultancy.Schema {
                 });
             Field<DeveloperType>("assignRole",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<AssignRoleInputType>> { Name = "input" }
+                    new QueryArgument<NonNullGraphType<AssignRoleInput>> { Name = "input" }
                 ),
                 resolve: context => {
                     var operation = context.GetArgument<RoleAssignment>("input");

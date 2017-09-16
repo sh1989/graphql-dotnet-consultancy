@@ -27,6 +27,7 @@ namespace GraphQLConsultancy
             services.AddSingleton<IDataRepository, DataRepository>();
 
             services.AddSingleton<ConsultancyQuery>();
+            services.AddSingleton<NamedInterface>();
             services.AddSingleton<CompetencyType>();
             services.AddSingleton<DeveloperType>();
             services.AddSingleton<ProjectType>();
@@ -34,14 +35,14 @@ namespace GraphQLConsultancy
             services.AddSingleton<SkillType>();
             services.AddSingleton<OrderType>();
             services.AddSingleton<ConsultancyMutation>();
-            services.AddSingleton<DeveloperInputType>();
-            services.AddSingleton<DeleteDeveloperInputType>();
-            services.AddSingleton<ProjectInputType>();
-            services.AddSingleton<DeleteProjectInputType>();
-            services.AddSingleton<SkillInputType>();
-            services.AddSingleton<AssignCompetencyInputType>();
-            services.AddSingleton<AssignProjectInputType>();
-            services.AddSingleton<AssignRoleInputType>();
+            services.AddSingleton<DeveloperInput>();
+            services.AddSingleton<DeleteDeveloperInput>();
+            services.AddSingleton<ProjectInput>();
+            services.AddSingleton<DeleteProjectInput>();
+            services.AddSingleton<SkillInput>();
+            services.AddSingleton<AssignCompetencyInput>();
+            services.AddSingleton<AssignProjectInput>();
+            services.AddSingleton<AssignRoleInput>();
             services.AddSingleton<ISchema>(s => new ConsultancySchema(type => (GraphType) s.GetService(type)));
         }
 

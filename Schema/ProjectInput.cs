@@ -1,8 +1,8 @@
 using GraphQL.Types;
 
 namespace GraphQLConsultancy.Schema {
-    public class ProjectInputType : InputObjectGraphType {
-        public ProjectInputType() {
+    public class ProjectInput : InputObjectGraphType {
+        public ProjectInput() {
             Field<NonNullGraphType<StringGraphType>>("name");
             Field<NonNullGraphType<StringGraphType>>("description");
         }
